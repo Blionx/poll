@@ -17,8 +17,23 @@ use Hash;
 use Input;
 class EncuestasController extends Controller {
 	public function index(){
-		$encuesta = Encuestas::get();
+		$encuesta = Encuestas::where('status','=','1')->get();
 		return Response::json($encuesta)->header("Access-Control-Allow-Origin", "*");
+	}
+	public function save(){
+		$info = Request::Json()->all();
+		$enc = new Encuestas;
+		$enc->name=$info['nombre'];
+		$enc->status="1";
+		$enc->save();
+		$resp="ok";
+		return Response::json($resp)->header("Access-Control-Allow-Origin","*");
+	}
+	public function delete($id){
+		$enc = Encuestas::find($id);
+		$enc->status = '0';
+		$enc->save();
+		return Response::json('ok')->header("Access-Control-Allow-Origin","*");
 	}
 
 }

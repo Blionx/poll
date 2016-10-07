@@ -20,5 +20,16 @@ class PreguntasController extends Controller {
 		$preguntas = Encuestas::find($id)->preguntas;
 		return response::json($preguntas)->header("Access-Control-Allow-Origin", "*");
 	}
+	public function save($id){
+		$info = Request::Json()->all();
+		$newp = new Preguntas;
+		$newp->name = $info['nombre'];
+		$newp->status = '10';
+		$newp->encuestas_id = $id;
+		$newp->type = $info['type'];
+		$newp->save();
+		$resp="ok";
+		return response::json($resp)->header("Access-Control-Allow-Origin","*");
+	}
 	
 }
