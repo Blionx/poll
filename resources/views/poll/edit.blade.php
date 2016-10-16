@@ -16,10 +16,11 @@
 			</div>
 			<div class="col-md-6">
 				<div class="form-group">
-					<span>Tipo</span>
-					<select class="form-control" name="type">
-						<option value="0" @if($e->type == 0) selected = "selected" @endif >Admin</option>
-						<option value="1" @if($e->type == 1) selected = "selected" @endif >Usuario</option>
+					<span>Empresa Asociada</span>
+					<select name="company" class="form-control">
+						@foreach($company as $c)
+						<option value="{{$c->id}}" @if($e->company_id == $c->id) selected = "selected" @endif >{{$c->name}}</option>
+						@endforeach
 					</select>
 				</div>
 			</div>

@@ -30,7 +30,7 @@ class CompanyController extends Controller {
 		$doomed->save();
 		return Redirect::to('company');
 	}
-	public function new(){
+	public function newer(){
 		return view('company.new');
 	}
 	public function create(){

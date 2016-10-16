@@ -10,5 +10,9 @@ class Encuestas extends Model {
     {
         return $this->hasMany('App\Preguntas');
     }
+    public function empresa()
+    {
+    	return $this->hasOne('App\Company', 'id', 'company_id');
+    }
 
 }

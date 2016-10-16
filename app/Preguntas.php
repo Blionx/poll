@@ -6,9 +6,9 @@ class Preguntas extends Model {
 
 	protected $table = 'preguntas';
 
-	public function opciones()
+	public function type()
     {
-        return $this->hasMany('App\Opciones');
+        return $this->hasOne('App\TipOpciones','id','tipo_opciones_id');
     }
 
 }

@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 use App\Encuestas;
 use App\Company;
+use App\User;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ClientException;
 use App\Http\Requests;
@@ -27,30 +28,44 @@ class PollController extends Controller {
 		$usuario = Encuestas::find($id);
 		$usuario->status=0;
 		$usuario->save();
-		return Redirect::to('encuestas');
+		$message = 'toastr.warning("Encuesta Eliminada con éxito", "Atención");';
+		return Redirect::to('encuestas')->with('message',$message);
 	}
-	public function new(){
-		return view('poll.new');
+	public function newer(){
+		$companylist = User::find(Auth::user()->id)->company;
+		$final=[];
+		foreach ($companylist as $c) {
+			$midle = Company::find($c->company_id);
+			array_push($final, $midle);
+		}
+		return view('poll.new', array('company'=>$final));
 	}
 	public function create(){
 		$newu = new Encuestas;
 		$newu->name = Request::Input('name');
-		$newu->type = Request::Input('type');
-		$newu->company_id = Request::Input('company_id');
+		$newu->company_id = Request::Input('company');
 		$newu->status = 1;
 		$newu->save();
-		return Redirect::to('/encuestas');
+		$message = 'toastr.success("Encuesta Creada con éxito", "Éxito");';
+		return Redirect::to('/encuestas')->with('message',$message);
 	}
 	public function edit($id){
 		$users = encuestas::find($id);
-		return view('poll.edit', array('e'=>$users));
+		$companylist = User::find(Auth::user()->id)->company;
+		$final=[];
+		foreach ($companylist as $c) {
+			$midle = Company::find($c->company_id);
+			array_push($final, $midle);
+		}
+		return view('poll.edit', array('e'=>$users,'company'=>$final));
 	}
 	public function editor($id){
 		$editu = encuestas::find($id);
 		$editu->name = Request::Input('name');
-		$editu->type = Request::Input('type');
+		$editu->company_id = Request::Input('company');
 		$editu->save();
-		return Redirect::to('/encuestas');
+		$message = 'toastr.info("Encuesta Actualizada con éxito", "Éxito");';
+		return Redirect::to('/encuestas')->with('message',$message);
 	}
 	
 

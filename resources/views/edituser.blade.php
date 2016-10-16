@@ -3,15 +3,15 @@
 <div class="panel-body">
                             <!-- Nav tabs -->
                             <ul class="nav nav-tabs">
-                                <li class="active"><a href="#info" data-toggle="tab">Información</a>
+                                <li @if(!isset($_GET['param']))class="active"@endif><a href="#info" data-toggle="tab">Información</a>
                                 </li>
-                                <li><a href="#company" data-toggle="tab">Empresas</a>
+                                <li @if(isset($_GET['param']))class="active"@endif><a href="#company" data-toggle="tab">Empresas</a>
                                 </li>
                             </ul>
 
                             <!-- Tab panes -->
                             <div class="tab-content">
-                                <div class="tab-pane fade in active" id="info">
+                                <div class="tab-pane fade @if(!isset($_GET['param'])) active in @endif " id="info">
                                     <div class="col-lg-12" style="align-items: center; display: flex;">
 									    <h1 class=" col-lg-10">Editar Usuario</h1>
 									    <a href="{{action('UsersController@index')}}" class="btn btn-outline btn-primary pull-right"><i class="fa fa-chevron-left"> Regresar</i></a>
@@ -48,7 +48,7 @@
 										</div>
 									</div>
                                 </div>
-                                <div class="tab-pane fade" id="company">
+                                <div class="tab-pane fade @if(isset($_GET['param'])) active in @endif" id="company">
                                     <div class="col-lg-12" style="align-items: center; display: flex;">
 									    <h1 class=" col-lg-10">Empresas asociadas</h1>
 									    <a data-toggle="modal" data-target="#myModal" class="btn btn-outline btn-success"><i class="fa fa-plus-circle">Asociar Empresa</i></a>
@@ -99,7 +99,7 @@
                                         				<td class="text-left">{{$r->name}}</td>
                                         				<td class="col-md-4 text-center"><img src="{{$r->logo}}" width="80%"></td>
                                         				<td>
-                                        					<a class="btn btn-success btn-circle btn-xl btn-outline">
+                                        					<a class="btn btn-success btn-circle btn-xl btn-outline" onclick="saveemp({{$r->id}}, {{$u->id}}, this);">
                                         						<i class="fa fa-check"></i>
                                         					</a>
                                         				</td>
@@ -107,8 +107,7 @@
                                         		@endforeach
                                         	</tbody>
                                         </table>
-                                            <button type="button" class="btn btn-outline btn-default" data-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-outline btn-primary">Save changes</button>
+                                            
                                          </div>
                                         </div>
                                     </div>
@@ -116,4 +115,23 @@
                                 </div>
                                 <!-- /.modal-dialog -->
                             </div>
+
+      <script type="text/javascript">
+      	function saveemp(eid,uid, row){
+      		$.get( "/usuarios/saveemp/"+uid+'/'+eid, function( data ) {
+              $(row).closest('tr').remove();
+              toastr.success("Empresa Agregada con éxito", "Éxito");
+            });
+      	};
+      	
+      	
+      </script>
+@stop
+@section('footer')
+<script type="text/javascript">
+	$('#myModal').on('hidden.bs.modal',function(){
+		var URLactual = window.location;
+      		window.location.href=URLactual+'?param=1';
+      	});
+</script>
 @stop

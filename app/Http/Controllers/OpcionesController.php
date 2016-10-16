@@ -2,6 +2,7 @@
 use App\Encuestas;
 use App\Preguntas;
 use App\Opciones;
+use App\TipOpciones;
 use GuzzleHttp\Exception\RequestException;
 use GuzzleHttp\Exception\ClientException;
 use App\Http\Requests;
@@ -18,8 +19,39 @@ use Input;
 class OpcionesController extends Controller {
 
 	public function index($id){
-		$opciones = Preguntas::find($id)->opciones;
-		return response::json($opciones)->header("Access-Control-Allow-Origin", "*");
+		$preguntas = TipOpciones::find($id)->preguntas;
+		$type = TipOpciones::find($id);
+		return view('opciones.index',array('preg'=>$preguntas,'ty'=>$type));
+	}
+	public function delete($id){
+		$doomed = Opciones::find($id);
+		$doomed->delete();
+		$message = 'toastr.warning("Pregunta Eliminada con éxito", "Atención");';
+		return Redirect::back()->with('message',$message);
+	}
+	public function newer($id){
+		$type= TipOpciones::find($id);
+		return view('opciones.new',array('ty'=>$type));
+	}
+	public function edit($tid,$id){
+		$type = TipOpciones::find($tid);
+		$cursed = Opciones::find($id);
+		return view('opciones.edit',array('p'=>$cursed,'ty'=>$type));
+	}
+	public function create($id){
+		$newitem = new Opciones;
+		$newitem->name = Request::Input('name');
+		$newitem->tipo_opciones_id = $id;
+		$newitem->save();
+		$message = 'toastr.success("Pregunta Creada con éxito", "Éxito");';
+		return Redirect::to('/opciones/'.$id)->with('message',$message);
+	}
+	public function editor($tid,$id){
+		$cursed = Opciones::find($id);
+		$cursed->name = Request::Input('name');
+		$cursed->save();
+		$message = 'toastr.info("Pregunta Actualizada con éxito", "Éxito");';
+		return Redirect::to('/opciones/'.$tid)->with('message',$message);
 	}
 	
 }
